@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callvu Calculator: Cost of Doing Nothing & ROI</title>
+    <style>
+        :root {
+            --primary-color: #E63946;
+            --secondary-color: #1D3557;
+            --bg-color: #F1FAEE;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --accent-green: #2A9D8F;
+            --tooltip-bg: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 1100px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* --- Header --- */
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { max-width: 180px; height: auto; margin-bottom: 15px; }
+        h1 { color: var(--secondary-color); margin: 0; font-size: 28px; font-weight: 700; }
+
+        /* --- Intro Sections --- */
+        .intro-text {
+            background-color: #f8f9fa;
+            border-left: 5px solid var(--primary-color);
+            padding: 25px;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+        }
+        .intro-section { margin-bottom: 20px; }
+        .intro-section:last-child { margin-bottom: 0; }
+        .intro-title {
+            color: var(--secondary-color);
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .intro-content ul { margin: 5px 0 10px 20px; padding: 0; }
+        .intro-content li { margin-bottom: 4px; }
+
+        /* --- Grid Layout --- */
+        .calculator-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+        }
+
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* --- Inputs & Tooltips --- */
+        .input-group { position: relative; }
+        
+        label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+        }
+
+        /* Tooltip Icon */
+        .info-icon {
+            background: #ddd;
+            color: #666;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            margin-left: 8px;
+            cursor: help;
+            font-weight: bold;
+        }
+
+        /* Tooltip Text */
+        .tooltip-text {
+            visibility: hidden;
+            width: 280px;
+            background-color: var(--tooltip-bg);
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%; /* Position above */
+            left: 50%;
+            margin-left: -140px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            font-weight: 400;
+            line-height: 1.4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .tooltip-text strong { display: block; color: #ffadad; margin-bottom: 4px; margin-top: 8px; }
+        .tooltip-text strong:first-child { margin-top: 0; }
+        
+        .info-icon:hover + .tooltip-text { visibility: visible; opacity: 1; }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e1e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            box-sizing: border-box; 
+        }
+        input[type="number"]:focus { border-color: var(--primary-color); outline: none; }
+
+        /* Remove Spinners */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* --- Results Section --- */
+        .results-section {
+            background-color: #fafafa;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #ccc;
+        }
+        .result-card.highlight { border-left-color: var(--primary-color); } /* Red for Cost */
+        .result-card.green { border-left-color: var(--accent-green); } /* Green for ROI */
+
+        .result-title { font-size: 0.8rem; text-transform: uppercase; color: #888; letter-spacing: 0.5px; }
+        .result-value { font-size: 1.6rem; font-weight: 700; color: var(--secondary-color); margin: 5px 0; }
+        .result-sub { font-size: 0.8rem; color: #666; }
+
+        .calc-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+        .calc-btn:hover { background-color: #c92a37; }
+
+        .full-width { grid-column: 1 / -1; margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;}
+        .section-header { grid-column: 1 / -1; color: var(--secondary-color); margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 10px;}
+
+        @media (max-width: 900px) {
+            .calculator-wrapper { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="https://via.placeholder.com/200x60?text=Callvu+Logo" alt="Callvu Logo" class="logo">
+        <h1>Callvu Calculator: Cost of Doing Nothing & ROI</h1>
+    </div>
+
+    <div class="intro-text">
+        <div class="intro-section">
+            <span class="intro-title">1. Current State</span>
+            <div class="intro-content">Based on your volume, agent costs, and current operational metrics.</div>
+        </div>
+        
+        <div class="intro-section">
+            <span class="intro-title">2. Why the Calculator Uses L or M (But Not Both)</span>
+            <div class="intro-content">
+                The calculator answers: "What does it cost you if nothing changes?" 
+                It compares two paths and automatically takes the bigger one:
+                <ul>
+                    <li><strong>Leakage (L):</strong> Money disappearing quietly (abandonment, lost revenue).</li>
+                    <li><strong>Manual Fallback (M):</strong> People doing what the system should have done (rework, backlog).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="intro-section">
+            <span class="intro-title">3. How an AE Chooses Between L and M (Simple Rule)</span>
+            <div class="intro-content">
+                Ask: "When this breaks, what hurts first?"
+                <ul>
+                    <li>"We lose money/customers" → <strong>Use Leakage (L)</strong></li>
+                    <li>"Teams jump in/rework explodes" → <strong>Use Manual Fallback (M)</strong></li>
+                </ul>
+                <em>If the buyer resists talking about revenue, switch to M immediately.</em>
+            </div>
+        </div>
+
+        <div class="intro-section">
+            <span class="intro-title">4. Why Risk (R) Is Always Included</span>
+            <div class="intro-content">
+                Even if daily issues are tolerated, leadership worries about compliance and audits.
+                We include <strong>Probability of Major Failure</strong> and <strong>Cost of Major Failure</strong>.
+            </div>
+        </div>
+    </div>
+
+    <div class="calculator-wrapper">
+        <div class="inputs-section">
+            
+            <div class="inputs-grid">
+                
+                <h4 class="section-header">Volume & Context</h4>
+                <div class="input-group">
+                    <label>D5: Annual Interaction Volume (N) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Total transactions/interactions per year.<br>
+                            <strong>How to ask:</strong> "Roughly how many of these do you process in a year?"<br>
+                            <strong>Rule:</strong> Annualize it. Never ask for precision.
+                        </div>
+                    </label>
+                    <input type="number" id="d5_volume" value="1000000">
+                </div>
+
+                <div class="input-group">
+                    <label>D6: High-Risk Share (%) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Portion that matters for compliance/risk.<br>
+                            <strong>How to ask:</strong> "Roughly what share are regulated or high-risk?"<br>
+                            <strong>Rule:</strong> Context only. Don't over-debate it.
+                        </div>
+                    </label>
+                    <input type="number" id="d6_risk_share" value="20">
+                </div>
+
+                <h4 class="section-header">Failure & Manual Costs (M)</h4>
+                <div class="input-group">
+                    <label>D7: Failure Rate (%) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> How often it doesn't finish cleanly.<br>
+                            <strong>How to ask:</strong> "Out of 100, how many need follow-up?"<br>
+                            <strong>Reality Check:</strong> If "none", ask why backlogs exist.
+                        </div>
+                    </label>
+                    <input type="number" id="d7_failure_rate" value="15">
+                </div>
+
+                <div class="input-group">
+                    <label>D8: Cost to Remediate ($) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Internal cost to fix one failed case.<br>
+                            <strong>How to ask:</strong> "Ballpark, what does it cost to clean one up? Agent time/Ops time?"<br>
+                            <strong>Rule:</strong> Fully loaded is better than optimistic.
+                        </div>
+                    </label>
+                    <input type="number" id="d8_remediate_cost" value="12">
+                </div>
+
+                <div class="input-group">
+                    <label>D9: Avg Delay (Days) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Time things sit stalled.<br>
+                            <strong>How to ask:</strong> "When stuck, how long does it sit? Same day or a week?"<br>
+                            <strong>Rule:</strong> Ask what feels typical, not mathematical average.
+                        </div>
+                    </label>
+                    <input type="number" id="d9_delay" value="2">
+                </div>
+                
+                <div class="input-group">
+                    <label>D12: Daily Backlog Cost ($) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Daily cost of carrying unresolved work.<br>
+                            <strong>How to ask:</strong> "What does one stuck case cost per day? Overtime/SLA fines?"<br>
+                            <strong>Rule:</strong> Use this OR Leakage inputs.
+                        </div>
+                    </label>
+                    <input type="number" id="d12_backlog_cost" value="0">
+                </div>
+
+                <h4 class="section-header">Leakage / Value at Risk (L)</h4>
+                <div class="input-group">
+                    <label>D10: Value at Risk ($) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Economic value at stake per interaction.<br>
+                            <strong>How to ask:</strong> "If one fails, what's the value? (Order/Claim value)"<br>
+                            <strong>Rule:</strong> If resisted, switch to Manual/Backlog model.
+                        </div>
+                    </label>
+                    <input type="number" id="d10_value_at_risk" value="100">
+                </div>
+
+                <div class="input-group">
+                    <label>D11: Leakage Rate (%) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Value lost specifically due to delay.<br>
+                            <strong>How to ask:</strong> "If this drags, how much value bleeds off? 1%? 5%?"<br>
+                            <strong>Rule:</strong> Start conservative.
+                        </div>
+                    </label>
+                    <input type="number" id="d11_leakage_rate" value="0">
+                </div>
+
+                <h4 class="section-header">Systemic Risk (R)</h4>
+                <div class="input-group">
+                    <label>D13: Annual Failure Prob (%) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> Chance of a major systemic issue this year.<br>
+                            <strong>How to ask:</strong> "How often do things blow up enough to get exec attention?"<br>
+                            <strong>Rule:</strong> Portfolio level, not per interaction.
+                        </div>
+                    </label>
+                    <input type="number" id="d13_sys_prob" value="20">
+                </div>
+
+                <div class="input-group">
+                    <label>D14: Cost of Major Failure ($) 
+                        <span class="info-icon">?</span>
+                        <div class="tooltip-text">
+                            <strong>What it is:</strong> All-in cost when things go really wrong.<br>
+                            <strong>How to ask:</strong> "Fines, remediation, fire drills - ballpark?"
+                        </div>
+                    </label>
+                    <input type="number" id="d14_sys_cost" value="250000">
+                </div>
+                
+                <h4 class="section-header">Investment</h4>
+                <div class="input-group full-width">
+                    <label>Platform Investment ($) - For ROI Calc</label>
+                    <input type="number" id="platform_cost" value="150000">
+                </div>
+
+            </div>
+            
+            <button class="calc-btn" onclick="calculateCoDN()">Update Calculations</button>
+        </div>
+
+        <div class="results-section">
+            <h3 style="margin-top: 0;">Financial Impact</h3>
+
+            <div class="result-card highlight">
+                <div class="result-title">Cost of Doing Nothing (Annual)</div>
+                <div class="result-value" id="resTotalCoDN">$0</div>
+                <div class="result-sub">Max(Leakage, Manual) + Risk</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-title">Winning Logic Path</div>
+                <div class="result-value" id="resPath" style="font-size: 1.2rem;">Manual Fallback</div>
+                <div class="result-sub" id="resPathSub">Calculation details</div>
+            </div>
+
+            <div class="result-card green">
+                <div class="result-title">Return on Investment (ROI)</div>
+                <div class="result-value" id="resROI">0%</div>
+                <div class="result-sub">Based on Investment vs CoDN Savings</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateCoDN() {
+        // --- 1. Get Values ---
+        const D5_Vol = parseFloat(document.getElementById('d5_volume').value) || 0;
+        const D7_FailRate = (parseFloat(document.getElementById('d7_failure_rate').value) || 0) / 100;
+        
+        // Manual Inputs
+        const D8_RemCost = parseFloat(document.getElementById('d8_remediate_cost').value) || 0;
+        const D9_Delay = parseFloat(document.getElementById('d9_delay').value) || 0;
+        const D12_BacklogCost = parseFloat(document.getElementById('d12_backlog_cost').value) || 0;
+        
+        // Leakage Inputs
+        const D10_VaR = parseFloat(document.getElementById('d10_value_at_risk').value) || 0;
+        const D11_LeakRate = (parseFloat(document.getElementById('d11_leakage_rate').value) || 0) / 100;
+
+        // Risk Inputs
+        const D13_SysProb = (parseFloat(document.getElementById('d13_sys_prob').value) || 0) / 100;
+        const D14_SysCost = parseFloat(document.getElementById('d14_sys_cost').value) || 0;
+
+        const PlatformCost = parseFloat(document.getElementById('platform_cost').value) || 0;
+
+        // --- 2. Logic ---
+        
+        // Affected Volume (Failed interactions)
+        const affectedVol = D5_Vol * D7_FailRate;
+
+        // Path M (Manual Fallback) Calculation
+        // Standard Manual Cost = Affected * Cost to Remediate
+        let cost_M = affectedVol * D8_RemCost;
+        // If they used D12 (Backlog Cost) instead, add that logic? 
+        // Logic: If D12 > 0, we might assume Backlog Model: Affected * Delay * DailyCost
+        if (D12_BacklogCost > 0) {
+            cost_M = affectedVol * D9_Delay * D12_BacklogCost;
+        }
+
+        // Path L (Leakage) Calculation
+        // Leakage = Affected * ValueAtRisk * LeakageRate
+        let cost_L = affectedVol * D10_VaR * D11_LeakRate;
+
+        // Path R (Risk) Calculation
+        // Risk = Probability * Cost
+        const cost_R = D13_SysProb * D14_SysCost;
+
+        // Determine Winner (L vs M)
+        let operationalCost = 0;
+        let winnerText = "";
+        let winnerSub = "";
+
+        if (cost_L > cost_M) {
+            operationalCost = cost_L;
+            winnerText = "Leakage (L)";
+            winnerSub = "Leakage exceeded Manual costs";
+        } else {
+            operationalCost = cost_M;
+            winnerText = "Manual Fallback (M)";
+            if (D12_BacklogCost > 0) {
+                winnerSub = "Driven by Daily Backlog Costs";
+            } else {
+                winnerSub = "Driven by Remediation Costs";
+            }
+        }
+
+        // Total Cost of Doing Nothing
+        const totalCoDN = operationalCost + cost_R;
+
+        // ROI
+        // ROI = (Savings - Investment) / Investment
+        // Assuming the solution eliminates the CoDN (or is compared against it)
+        let roi = 0;
+        if (PlatformCost > 0) {
+            roi = ((totalCoDN - PlatformCost) / PlatformCost) * 100;
+        }
+
+        // --- 3. Formatting ---
+        const fmtMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+        
+        document.getElementById('resTotalCoDN').innerText = fmtMoney.format(totalCoDN);
+        document.getElementById('resPath').innerText = winnerText;
+        document.getElementById('resPathSub').innerText = winnerSub;
+        document.getElementById('resROI').innerText = Math.round(roi) + "%";
+    }
+
+    // Run on load
+    window.onload = calculateCoDN;
+</script>
+
+</body>
+</html>
