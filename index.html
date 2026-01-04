@@ -6,7 +6,7 @@
     <title>Callvu Calculator: Cost of Doing Nothing & ROI</title>
     <style>
         :root {
-            /* CHANGED: Primary color set to specific Blue */
+            /* Primary Blue Color */
             --primary-color: #333F70;
             --secondary-color: #1D3557;
             --bg-color: #F1FAEE;
@@ -107,8 +107,7 @@
         
         .radio-label.selected {
             border-color: var(--primary-color);
-            /* CHANGED: Background from light pink to light blue-grey to match new theme */
-            background-color: #eff1f7;
+            background-color: #eff1f7; /* Light blue-grey tint */
             color: var(--primary-color);
         }
 
@@ -160,13 +159,14 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         
-        /* CHANGED: Tooltip highlight text from light red to light blue for readability */
+        /* Light blue for tooltip highlights */
         .tooltip-text strong { display: block; color: #a4b0d9; margin-bottom: 4px; margin-top: 8px; }
         .tooltip-text strong:first-child { margin-top: 0; }
         
         .info-icon:hover + .tooltip-text { visibility: visible; opacity: 1; }
 
-        input[type="number"] {
+        /* CHANGED: Inputs are now text type to support commas */
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             border: 2px solid #e1e1e1;
@@ -174,9 +174,7 @@
             font-size: 0.95rem;
             box-sizing: border-box; 
         }
-        input[type="number"]:focus { border-color: var(--primary-color); outline: none; }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
+        input[type="text"]:focus { border-color: var(--primary-color); outline: none; }
 
         /* --- Sections Visibility --- */
         .section-header { 
@@ -229,7 +227,6 @@
             margin-top: 30px;
             transition: background-color 0.2s;
         }
-        /* CHANGED: Button hover color to a darker shade of the new blue */
         .calc-btn:hover { background-color: #262F54; }
 
         @media (max-width: 900px) {
@@ -247,7 +244,7 @@
     
     <div class="intro-text">
         <div class="intro-section">
-            <span class="intro-title"> Why the Calculator Uses L or M (But Not Both)</span>
+            <span class="intro-title">Why the Calculator Uses L or M (But Not Both)</span>
             <div class="intro-content">
                 The calculator answers: "What does it cost you if nothing changes?" 
                 It compares two paths:
@@ -259,7 +256,7 @@
         </div>
 
         <div class="intro-section">
-            <span class="intro-title"> How an AE Chooses Between L and M (Simple Rule)</span>
+            <span class="intro-title">How an AE Chooses Between L and M (Simple Rule)</span>
             <div class="intro-content">
                 Ask: "When this breaks, what hurts first?"
                 <ul>
@@ -271,7 +268,7 @@
         </div>
 
         <div class="intro-section">
-            <span class="intro-title"> Why Risk (R) Is Always Included</span>
+            <span class="intro-title">Why Risk (R) Is Always Included</span>
             <div class="intro-content">
                 Even if daily issues are tolerated, leadership worries about compliance and audits.
                 We include <strong>Probability of Major Failure</strong> and <strong>Cost of Major Failure</strong>.
@@ -310,7 +307,7 @@
                             <strong>Rule:</strong> Annualize it. Never ask for precision.
                         </div>
                     </label>
-                    <input type="number" id="d5_volume" placeholder="e.g. 1000000">
+                    <input type="text" id="d5_volume" placeholder="e.g. 1,000,000" oninput="formatInput(this)">
                 </div>
 
                 <div class="input-group">
@@ -322,7 +319,7 @@
                             <strong>Rule:</strong> Context only. Don't over-debate it.
                         </div>
                     </label>
-                    <input type="number" id="d6_risk_share" placeholder="e.g. 20">
+                    <input type="text" id="d6_risk_share" placeholder="e.g. 20" oninput="formatInput(this)">
                 </div>
 
                 <div class="input-group">
@@ -334,7 +331,7 @@
                             <strong>Reality Check:</strong> If "none", ask why backlogs exist.
                         </div>
                     </label>
-                    <input type="number" id="d7_failure_rate" placeholder="e.g. 15">
+                    <input type="text" id="d7_failure_rate" placeholder="e.g. 15" oninput="formatInput(this)">
                 </div>
 
                 <div class="input-group">
@@ -346,7 +343,7 @@
                             <strong>Rule:</strong> Fully loaded is better than optimistic.
                         </div>
                     </label>
-                    <input type="number" id="d8_remediate_cost" placeholder="e.g. 12.00">
+                    <input type="text" id="d8_remediate_cost" placeholder="e.g. 12.00" oninput="formatInput(this)">
                 </div>
 
                 <div class="input-group">
@@ -358,7 +355,7 @@
                             <strong>Rule:</strong> Ask what feels typical, not mathematical average.
                         </div>
                     </label>
-                    <input type="number" id="d9_delay" placeholder="e.g. 2">
+                    <input type="text" id="d9_delay" placeholder="e.g. 2" oninput="formatInput(this)">
                 </div>
 
                 <div id="manual-inputs" class="hidden">
@@ -372,7 +369,7 @@
                                 <strong>Rule:</strong> Use this OR Leakage inputs.
                             </div>
                         </label>
-                        <input type="number" id="d12_backlog_cost" placeholder="e.g. 5.00">
+                        <input type="text" id="d12_backlog_cost" placeholder="e.g. 5.00" oninput="formatInput(this)">
                     </div>
                 </div>
 
@@ -388,7 +385,7 @@
                                 <strong>Rule:</strong> If resisted, switch to Manual/Backlog model.
                             </div>
                         </label>
-                        <input type="number" id="d10_value_at_risk" placeholder="e.g. 100.00">
+                        <input type="text" id="d10_value_at_risk" placeholder="e.g. 100.00" oninput="formatInput(this)">
                     </div>
 
                     <div class="input-group">
@@ -400,7 +397,7 @@
                                 <strong>Rule:</strong> Start conservative.
                             </div>
                         </label>
-                        <input type="number" id="d11_leakage_rate" placeholder="e.g. 1">
+                        <input type="text" id="d11_leakage_rate" placeholder="e.g. 1" oninput="formatInput(this)">
                     </div>
                 </div>
 
@@ -415,7 +412,7 @@
                             <strong>Rule:</strong> Portfolio level, not per interaction.
                         </div>
                     </label>
-                    <input type="number" id="d13_sys_prob" placeholder="e.g. 20">
+                    <input type="text" id="d13_sys_prob" placeholder="e.g. 20" oninput="formatInput(this)">
                 </div>
 
                 <div class="input-group">
@@ -426,13 +423,13 @@
                             <strong>How to ask:</strong> "Fines, remediation, fire drills - ballpark?"
                         </div>
                     </label>
-                    <input type="number" id="d14_sys_cost" placeholder="e.g. 250000">
+                    <input type="text" id="d14_sys_cost" placeholder="e.g. 250,000" oninput="formatInput(this)">
                 </div>
                 
                 <h4 class="section-header">Investment</h4>
                 <div class="input-group" style="width: 100%;">
-                    <label>D15: Platform Investment ($) - For ROI Calc</label>
-                    <input type="number" id="platform_cost" placeholder="e.g. 150000">
+                    <label>D15: Annual Callvu Cost ($) - For ROI Calculation</label>
+                    <input type="text" id="platform_cost" placeholder="e.g. 150,000" oninput="formatInput(this)">
                 </div>
 
             </div>
@@ -490,6 +487,41 @@
 </div>
 
 <script>
+    // --- FORMATTING FUNCTION ---
+    function formatInput(input) {
+        // 1. Remove existing commas to get clean number
+        let rawVal = input.value.replace(/,/g, '');
+        
+        // 2. Allow digits and a single decimal point
+        // This regex leaves digits and dots, then we handle multiple dots logic
+        rawVal = rawVal.replace(/[^0-9.]/g, '');
+        
+        if (rawVal === '') {
+            input.value = '';
+            return;
+        }
+
+        // 3. Split integer and decimal parts
+        let parts = rawVal.split('.');
+        
+        // 4. Add commas to integer part
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        
+        // 5. Rejoin (limit to one decimal point by ignoring extra parts)
+        if (parts.length > 1) {
+            input.value = parts[0] + "." + parts.slice(1).join('');
+        } else {
+            input.value = parts[0];
+        }
+    }
+
+    // --- HELPER TO PARSE NUMBERS WITH COMMAS ---
+    function parseLocaleNumber(stringNumber) {
+        if (!stringNumber) return 0;
+        // Remove commas before parsing
+        return parseFloat(stringNumber.replace(/,/g, '')) || 0;
+    }
+
     function toggleMode() {
         const mode = document.querySelector('input[name="calcMode"]:checked').value;
         const manualDiv = document.getElementById('manual-inputs');
@@ -534,17 +566,17 @@
     }
 
     function calculateCoDN() {
-        // --- 1. Get Values ---
+        // --- 1. Get Values (Using helper to strip commas) ---
         const mode = document.querySelector('input[name="calcMode"]:checked').value;
         
-        const D5_Vol = parseFloat(document.getElementById('d5_volume').value) || 0;
-        const D7_FailRate = (parseFloat(document.getElementById('d7_failure_rate').value) || 0) / 100;
-        const D8_RemCost = parseFloat(document.getElementById('d8_remediate_cost').value) || 0;
-        const D9_Delay = parseFloat(document.getElementById('d9_delay').value) || 0;
+        const D5_Vol = parseLocaleNumber(document.getElementById('d5_volume').value);
+        const D7_FailRate = parseLocaleNumber(document.getElementById('d7_failure_rate').value) / 100;
+        const D8_RemCost = parseLocaleNumber(document.getElementById('d8_remediate_cost').value);
+        const D9_Delay = parseLocaleNumber(document.getElementById('d9_delay').value);
 
-        const D13_SysProb = (parseFloat(document.getElementById('d13_sys_prob').value) || 0) / 100;
-        const D14_SysCost = parseFloat(document.getElementById('d14_sys_cost').value) || 0;
-        const PlatformCost = parseFloat(document.getElementById('platform_cost').value) || 0;
+        const D13_SysProb = parseLocaleNumber(document.getElementById('d13_sys_prob').value) / 100;
+        const D14_SysCost = parseLocaleNumber(document.getElementById('d14_sys_cost').value);
+        const PlatformCost = parseLocaleNumber(document.getElementById('platform_cost').value);
 
         // --- 2. Calculations ---
 
@@ -560,7 +592,7 @@
 
         if (mode === 'manual') {
             // Manual Mode: Uses D12
-            const D12_BacklogCost = parseFloat(document.getElementById('d12_backlog_cost').value) || 0;
+            const D12_BacklogCost = parseLocaleNumber(document.getElementById('d12_backlog_cost').value);
             
             // C21 Formula: Affected * Delay * DailyCost
             C21 = affectedVol * D9_Delay * D12_BacklogCost;
@@ -568,8 +600,8 @@
 
         } else {
             // Leakage Mode: Uses D10, D11
-            const D10_VaR = parseFloat(document.getElementById('d10_value_at_risk').value) || 0;
-            const D11_LeakRate = (parseFloat(document.getElementById('d11_leakage_rate').value) || 0) / 100;
+            const D10_VaR = parseLocaleNumber(document.getElementById('d10_value_at_risk').value);
+            const D11_LeakRate = parseLocaleNumber(document.getElementById('d11_leakage_rate').value) / 100;
 
             // C20 Formula: Affected * Delay * ValueAtRisk * LeakageRate
             C20 = affectedVol * D9_Delay * D10_VaR * D11_LeakRate;
