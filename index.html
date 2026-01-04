@@ -6,7 +6,7 @@
     <title>Callvu Calculator: Cost of Doing Nothing & ROI</title>
     <style>
         :root {
-            /* Primary Blue Color */
+            /* Primary Blue Color requested */
             --primary-color: #333F70;
             --secondary-color: #1D3557;
             --bg-color: #F1FAEE;
@@ -165,7 +165,7 @@
         
         .info-icon:hover + .tooltip-text { visibility: visible; opacity: 1; }
 
-        /* CHANGED: Inputs are now text type to support commas */
+        /* Using Text inputs to support Commas */
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -493,7 +493,6 @@
         let rawVal = input.value.replace(/,/g, '');
         
         // 2. Allow digits and a single decimal point
-        // This regex leaves digits and dots, then we handle multiple dots logic
         rawVal = rawVal.replace(/[^0-9.]/g, '');
         
         if (rawVal === '') {
@@ -507,7 +506,7 @@
         // 4. Add commas to integer part
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         
-        // 5. Rejoin (limit to one decimal point by ignoring extra parts)
+        // 5. Rejoin
         if (parts.length > 1) {
             input.value = parts[0] + "." + parts.slice(1).join('');
         } else {
