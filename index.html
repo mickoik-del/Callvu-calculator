@@ -104,7 +104,6 @@
         input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
         input[type="radio"]:checked + span { color: var(--primary-color); }
         
-        /* Highlight selected radio box */
         .radio-label.selected {
             border-color: var(--primary-color);
             background-color: #fff0f1;
@@ -186,7 +185,6 @@
             font-size: 1.1rem;
         }
         
-        /* Classes to toggle visibility */
         .hidden { display: none; }
 
         /* --- Results Section --- */
@@ -441,23 +439,48 @@
         <div class="results-section">
             <h3 style="margin-top: 0;">Financial Impact</h3>
 
-            <div class="result-card highlight">
-                <div class="result-title">Cost of Doing Nothing (Annual)</div>
-                <div class="result-value" id="resTotalCoDN">$0</div>
-                <div class="result-sub" id="resSub">Includes Operational Waste + Risk</div>
+            <div class="result-card">
+                <div class="result-title">C19: Cost of Incompletion</div>
+                <div class="result-value" id="resC19">$0</div>
+                <div class="result-sub">Standard Remediation (N_affected × D8)</div>
+            </div>
+
+            <div class="result-card" id="card-C20">
+                <div class="result-title">C20: Cost of Delay (Revenue Leakage)</div>
+                <div class="result-value" id="resC20">$0</div>
+                <div class="result-sub">Due to Value at Risk & Delay</div>
+            </div>
+
+            <div class="result-card hidden" id="card-C21">
+                <div class="result-title">C21: Cost of Delay (Ops Backlog)</div>
+                <div class="result-value" id="resC21">$0</div>
+                <div class="result-sub">Due to Backlog & Delay</div>
             </div>
 
             <div class="result-card">
-                <div class="result-title">Selected Model</div>
-                <div class="result-value" id="resPath" style="font-size: 1.2rem;">Manual Fallback</div>
-                <div class="result-sub" id="resPathSub">Calculation details</div>
+                <div class="result-title">C22: Compliance / Payment Exposure</div>
+                <div class="result-value" id="resC22">$0</div>
+                <div class="result-sub">Expected Annual Loss (R)</div>
+            </div>
+
+            <div class="result-card highlight">
+                <div class="result-title">C25: Total Cost of Doing Nothing (Annual)</div>
+                <div class="result-value" id="resC25">$0</div>
+                <div class="result-sub">Sum of Incompletion + Delay + Risk</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-title">C28: Cost of Delaying Decision (1 Quarter)</div>
+                <div class="result-value" id="resC28">$0</div>
+                <div class="result-sub">25% of Annual Cost</div>
             </div>
 
             <div class="result-card green">
-                <div class="result-title">Return on Investment (ROI)</div>
-                <div class="result-value" id="resROI">0%</div>
-                <div class="result-sub">Based on Investment vs CoDN Savings</div>
+                <div class="result-title">C31: Annual Value Multiple vs Cost</div>
+                <div class="result-value" id="resC31">0.0x</div>
+                <div class="result-sub">Total CoDN / Platform Cost</div>
             </div>
+
         </div>
     </div>
 </div>
@@ -468,23 +491,41 @@
         const manualDiv = document.getElementById('manual-inputs');
         const leakageDiv = document.getElementById('leakage-inputs');
         
-        // Visual toggle of styles
         const lblManual = document.getElementById('lbl-manual');
         const lblLeakage = document.getElementById('lbl-leakage');
+        
+        // Output cards visibility
+        const cardC20 = document.getElementById('card-C20'); // Leakage Result
+        const cardC21 = document.getElementById('card-C21'); // Backlog Result
 
         if (mode === 'manual') {
+            // Show Manual Inputs, Hide Leakage Inputs
             manualDiv.classList.remove('hidden');
             leakageDiv.classList.add('hidden');
+            
+            // Toggle Tab styling
             lblManual.classList.add('selected');
             lblLeakage.classList.remove('selected');
+
+            // Toggle Result Cards
+            cardC20.classList.add('hidden');
+            cardC21.classList.remove('hidden');
+
         } else {
+            // Show Leakage Inputs, Hide Manual Inputs
             manualDiv.classList.add('hidden');
             leakageDiv.classList.remove('hidden');
+
+            // Toggle Tab styling
             lblManual.classList.remove('selected');
             lblLeakage.classList.add('selected');
+
+            // Toggle Result Cards
+            cardC20.classList.remove('hidden');
+            cardC21.classList.add('hidden');
         }
         
-        // Recalculate immediately when switching
+        // Recalculate
         calculateCoDN();
     }
 
@@ -492,80 +533,82 @@
         // --- 1. Get Values ---
         const mode = document.querySelector('input[name="calcMode"]:checked').value;
         
-        // Basic Shared Inputs
         const D5_Vol = parseFloat(document.getElementById('d5_volume').value) || 0;
         const D7_FailRate = (parseFloat(document.getElementById('d7_failure_rate').value) || 0) / 100;
         const D8_RemCost = parseFloat(document.getElementById('d8_remediate_cost').value) || 0;
         const D9_Delay = parseFloat(document.getElementById('d9_delay').value) || 0;
 
-        // Risk Inputs (Shared)
         const D13_SysProb = (parseFloat(document.getElementById('d13_sys_prob').value) || 0) / 100;
         const D14_SysCost = parseFloat(document.getElementById('d14_sys_cost').value) || 0;
-        
-        // Investment (Shared)
         const PlatformCost = parseFloat(document.getElementById('platform_cost').value) || 0;
 
-        // --- 2. Logic ---
+        // --- 2. Calculations ---
 
-        // Affected Volume (N_affected = N * D7)
+        // Affected Volume
         const affectedVol = D5_Vol * D7_FailRate;
-        
-        let operationalCost = 0;
-        let winnerText = "";
-        let winnerSub = "";
+
+        // C19: Cost of Incompletion (Always calculated)
+        const C19 = affectedVol * D8_RemCost;
+
+        let C20 = 0; // Leakage Delay Cost
+        let C21 = 0; // Backlog Delay Cost
+        let delayCost = 0; // The one we add to total
 
         if (mode === 'manual') {
-            // Get Manual Specific Input
+            // Manual Mode: Uses D12
             const D12_BacklogCost = parseFloat(document.getElementById('d12_backlog_cost').value) || 0;
-
-            // Scenario 1: Standard Remediation (Default) -> Affected * D8
-            operationalCost = affectedVol * D8_RemCost;
-            winnerSub = "Driven by Remediation Cost (D8)";
             
-            // Scenario 2: Backlog Model -> Affected * D9 * D12
-            // Only overrides if D12 is provided > 0
-            if (D12_BacklogCost > 0) {
-                operationalCost = affectedVol * D9_Delay * D12_BacklogCost;
-                winnerSub = "Driven by Backlog Cost (D12)";
-            }
-            winnerText = "Manual Fallback (M)";
-        
+            // C21 Formula: Affected * Delay * DailyCost
+            C21 = affectedVol * D9_Delay * D12_BacklogCost;
+            delayCost = C21;
+
         } else {
-            // Get Leakage Inputs
+            // Leakage Mode: Uses D10, D11
             const D10_VaR = parseFloat(document.getElementById('d10_value_at_risk').value) || 0;
             const D11_LeakRate = (parseFloat(document.getElementById('d11_leakage_rate').value) || 0) / 100;
 
-            // Leakage Logic -> Affected * D10 * D11
-            operationalCost = affectedVol * D10_VaR * D11_LeakRate;
-            winnerText = "Leakage (L)";
-            winnerSub = "Driven by Value at Risk (D10)";
+            // C20 Formula: Affected * Delay * ValueAtRisk * LeakageRate
+            C20 = affectedVol * D9_Delay * D10_VaR * D11_LeakRate;
+            delayCost = C20;
         }
 
-        // Path R (Risk) Calculation -> D13 * D14
-        const cost_R = D13_SysProb * D14_SysCost;
+        // C22: Compliance Exposure (Risk)
+        const C22 = D13_SysProb * D14_SysCost;
 
-        // Total Cost of Doing Nothing
-        const totalCoDN = operationalCost + cost_R;
+        // C25: Total Cost of Doing Nothing
+        const C25 = C19 + delayCost + C22;
 
-        // ROI -> (TotalCoDN - Investment) / Investment
-        let roi = 0;
+        // C28: Cost of Delaying Decision (1 Quarter)
+        const C28 = C25 / 4;
+
+        // C31: Annual Value Multiple (ROI)
+        let C31 = 0;
         if (PlatformCost > 0) {
-            roi = ((totalCoDN - PlatformCost) / PlatformCost) * 100;
+            C31 = C25 / PlatformCost;
         }
 
-        // --- 3. Formatting ---
+        // --- 3. Update UI ---
         const fmtMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
         
-        document.getElementById('resTotalCoDN').innerText = fmtMoney.format(totalCoDN);
-        document.getElementById('resPath').innerText = winnerText;
-        document.getElementById('resPathSub').innerText = winnerSub;
-        document.getElementById('resROI').innerText = Math.round(roi) + "%";
+        document.getElementById('resC19').innerText = fmtMoney.format(C19);
+        
+        // Update the visible delay cost card
+        if (mode === 'manual') {
+            document.getElementById('resC21').innerText = fmtMoney.format(C21);
+        } else {
+            document.getElementById('resC20').innerText = fmtMoney.format(C20);
+        }
+
+        document.getElementById('resC22').innerText = fmtMoney.format(C22);
+        document.getElementById('resC25').innerText = fmtMoney.format(C25);
+        document.getElementById('resC28').innerText = fmtMoney.format(C28);
+        document.getElementById('resC31').innerText = C31.toFixed(1) + "x";
     }
 
     // Run on load
     window.onload = function() {
-        toggleMode(); // Ensure correct inputs are shown
-        calculateCoDN(); // Initial calc
+        toggleMode(); 
+        calculateCoDN(); 
     };
 </script>
 
