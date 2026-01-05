@@ -2,237 +2,239 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Callvu Calculator: Cost of Doing Nothing & ROI</title>
+    
+    <meta name="robots" content="noindex, nofollow">
+
+    <title> Workflow Readiness Scorecard</title>
     <style>
         :root {
-            /* Primary Blue Color requested */
             --primary-color: #333F70;
-            --secondary-color: #1D3557;
-            --bg-color: #F1FAEE;
-            --card-bg: #FFFFFF;
-            --text-color: #333333;
-            --accent-green: #2A9D8F;
-            --tooltip-bg: #333;
+            --primary-light: #4A5685;
+            --primary-faint: #E6E8F0;
+            --text-dark: #333;
+            --white: #ffffff;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #f4f4f9;
+            color: var(--text-dark);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
         }
 
         .container {
-            background-color: var(--card-bg);
+            max-width: 800px;
             width: 100%;
-            max-width: 1100px;
+            background-color: var(--white);
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- Header --- */
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { max-width: 180px; height: auto; margin-bottom: 15px; }
-        h1 { color: var(--secondary-color); margin: 0; font-size: 28px; font-weight: 700; }
-
-        /* --- Intro Sections --- */
-        .intro-text {
-            background-color: #f8f9fa;
-            border-left: 5px solid var(--primary-color);
-            padding: 25px;
-            margin-bottom: 40px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #444;
-        }
-        .intro-section { margin-bottom: 20px; }
-        .intro-section:last-child { margin-bottom: 0; }
-        .intro-title {
-            color: var(--secondary-color);
-            font-weight: 700;
-            font-size: 1.05rem;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .intro-content ul { margin: 5px 0 10px 20px; padding: 0; }
-
-        /* --- Grid Layout --- */
-        .calculator-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 40px;
-        }
-
-        /* --- Mode Switcher --- */
-        .mode-selector {
-            background: #eef1f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+        /* Header & Logo */
+        .header {
             text-align: center;
-            border: 1px solid #ddd;
+            margin-bottom: 40px;
         }
-        .mode-title {
-            font-weight: 700;
-            color: var(--secondary-color);
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0 0 20px 0;
+            font-size: 28px;
+        }
+
+        /* Updated Intro Styles */
+        .intro-main {
+            text-align: center;
+            color: var(--primary-color); /* Used primary color for emphasis */
             margin-bottom: 10px;
-            display: block;
+            font-size: 20px; /* Slightly bigger */
+            font-weight: 700; /* Bold */
+            line-height: 1.4;
         }
-        .radio-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+
+        .intro-sub {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+            margin-top: 0;
         }
-        .radio-label {
-            cursor: pointer;
-            padding: 10px 20px;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s;
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-faint);
+            padding-bottom: 10px;
+            margin-top: 30px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Questions */
+        .question-group {
+            margin-bottom: 20px;
+        }
+
+        .question-item {
             display: flex;
             align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
         }
-        .radio-label:hover { border-color: var(--primary-color); }
-        input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
-        input[type="radio"]:checked + span { color: var(--primary-color); }
-        
-        .radio-label.selected {
-            border-color: var(--primary-color);
-            background-color: #eff1f7; /* Light blue-grey tint */
+
+        .question-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Custom Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .label-text {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        /* Calculate Button */
+        .btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px; /* Adjusted padding for longer text */
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        button:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Results Section */
+        #results {
+            display: none; /* Hidden by default */
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: var(--primary-faint);
+            border: 2px solid var(--primary-color);
+        }
+
+        .verdict-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .verdict-title {
+            font-size: 24px;
+            font-weight: bold;
             color: var(--primary-color);
         }
 
-        /* --- Inputs & Tooltips --- */
-        .input-group { position: relative; margin-bottom: 15px; }
-        
-        label {
-            display: flex;
-            align-items: center;
+        .verdict-subtitle {
+            font-size: 18px;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .result-details h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .result-details ul {
+            margin-bottom: 20px;
+        }
+
+        .result-details li {
             margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--secondary-color);
-            font-size: 0.85rem;
         }
 
-        .info-icon {
-            background: #ddd;
-            color: #666;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            margin-left: 8px;
-            cursor: help;
-            font-weight: bold;
-        }
-
-        .tooltip-text {
-            visibility: hidden;
-            width: 280px;
-            background-color: var(--tooltip-bg);
-            color: #fff;
-            text-align: left;
-            border-radius: 6px;
-            padding: 12px;
-            position: absolute;
-            z-index: 10;
-            bottom: 125%; 
-            left: 50%;
-            margin-left: -140px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.8rem;
-            font-weight: 400;
-            line-height: 1.4;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        
-        /* Light blue for tooltip highlights */
-        .tooltip-text strong { display: block; color: #a4b0d9; margin-bottom: 4px; margin-top: 8px; }
-        .tooltip-text strong:first-child { margin-top: 0; }
-        
-        .info-icon:hover + .tooltip-text { visibility: visible; opacity: 1; }
-
-        /* Using Text inputs to support Commas */
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e1e1e1;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            box-sizing: border-box; 
-        }
-        input[type="text"]:focus { border-color: var(--primary-color); outline: none; }
-
-        /* --- Sections Visibility --- */
-        .section-header { 
-            color: var(--secondary-color); 
-            margin-bottom: 15px; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 5px; 
-            margin-top: 25px;
-            font-size: 1.1rem;
-        }
-        
-        .hidden { display: none; }
-
-        /* --- Results Section --- */
-        .results-section {
-            background-color: #fafafa;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-
-        .result-card {
-            background: white;
+        .action-box {
+            background-color: var(--white);
             padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-left: 4px solid #ccc;
+            border-left: 5px solid var(--primary-color);
+            margin-top: 20px;
         }
-        .result-card.highlight { border-left-color: var(--primary-color); }
-        .result-card.green { border-left-color: var(--accent-green); }
 
-        .result-title { font-size: 0.8rem; text-transform: uppercase; color: #888; letter-spacing: 0.5px; }
-        .result-value { font-size: 1.6rem; font-weight: 700; color: var(--secondary-color); margin: 5px 0; }
-        .result-sub { font-size: 0.8rem; color: #666; }
-
-        .calc-btn {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: background-color 0.2s;
+        .action-box strong {
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 5px;
         }
-        .calc-btn:hover { background-color: #262F54; }
 
-        @media (max-width: 900px) {
-            .calculator-wrapper { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
@@ -240,412 +242,267 @@
 <div class="container">
     <div class="header">
         <img src="logo.png" alt="Callvu Logo" class="logo">
-        <h1>Callvu Calculator: Cost of Doing Nothing & ROI</h1>
-    </div>
-    
-    <div class="intro-text">
-        <div class="intro-section">
-            <span class="intro-title">Why the Calculator Uses L or M (But Not Both)</span>
-            <div class="intro-content">
-                The calculator answers: "What does it cost you if nothing changes?" 
-                It compares two paths:
-                <ul>
-                    <li><strong>Leakage (L):</strong> Money disappearing quietly (abandonment, lost revenue).</li>
-                    <li><strong>Manual Fallback (M):</strong> People doing what the system should have done (rework, backlog).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="intro-section">
-            <span class="intro-title">How an AE Chooses Between L and M (Simple Rule)</span>
-            <div class="intro-content">
-                Ask: "When this breaks, what hurts first?"
-                <ul>
-                    <li>"We lose money/customers" → <strong>Use Leakage (L)</strong></li>
-                    <li>"Teams jump in/rework explodes" → <strong>Use Manual Fallback (M)</strong></li>
-                </ul>
-                <em>If the buyer resists talking about revenue, switch to M immediately.</em>
-            </div>
-        </div>
-
-        <div class="intro-section">
-            <span class="intro-title">Why Risk (R) Is Always Included</span>
-            <div class="intro-content">
-                Even if daily issues are tolerated, leadership worries about compliance and audits.
-                We include <strong>Probability of Major Failure</strong> and <strong>Cost of Major Failure</strong>.
-            </div>
-        </div>
+        <h1>Callvu Readiness Scorecard</h1>
+        
+        <p class="intro-main">Evaluate whether your workflow is safe for agentic AI autonomy or requires deterministic compliance.</p>
+        <p class="intro-sub">Please answer the following questions regarding your customer workflow</p>
     </div>
 
-    <div class="calculator-wrapper">
-        <div class="inputs-section">
-            
-            <div class="mode-selector">
-                <span class="mode-title">Select Calculation Path</span>
-                <div class="radio-group">
-                    <label class="radio-label selected" id="lbl-leakage">
-                        <input type="radio" name="calcMode" value="leakage" checked onchange="toggleMode()">
-                        <span>Leakage (L)</span>
-                    </label>
-
-                    <label class="radio-label" id="lbl-manual">
-                        <input type="radio" name="calcMode" value="manual" onchange="toggleMode()">
-                        <span>Manual Fallback (M)</span>
-                    </label>
-                </div>
+    <div id="scorecardForm">
+        
+        <h2>Risk & Compliance</h2>
+        <div class="question-group">
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Requires identity verification?</span>
             </div>
-
-            <div class="inputs-grid">
-                
-                <h4 class="section-header">Shared Operational Metrics</h4>
-                
-                <div class="input-group">
-                    <label>D5: Annual Interaction Volume (N) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> Total transactions/interactions per year.<br>
-                            <strong>How to ask:</strong> "Roughly how many of these do you process in a year?"<br>
-                            <strong>Rule:</strong> Annualize it. Never ask for precision.
-                        </div>
-                    </label>
-                    <input type="text" id="d5_volume" placeholder="e.g. 1,000,000" oninput="formatInput(this)">
-                </div>
-
-                <div class="input-group">
-                    <label>D6: High-Risk Share (%) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> Portion that matters for compliance/risk.<br>
-                            <strong>How to ask:</strong> "Roughly what share are regulated or high-risk?"<br>
-                            <strong>Rule:</strong> Context only. Don't over-debate it.
-                        </div>
-                    </label>
-                    <input type="text" id="d6_risk_share" placeholder="e.g. 20" oninput="formatInput(this)">
-                </div>
-
-                <div class="input-group">
-                    <label>D7: Failure Rate (%) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> How often it doesn't finish cleanly.<br>
-                            <strong>How to ask:</strong> "Out of 100, how many need follow-up?"<br>
-                            <strong>Reality Check:</strong> If "none", ask why backlogs exist.
-                        </div>
-                    </label>
-                    <input type="text" id="d7_failure_rate" placeholder="e.g. 15" oninput="formatInput(this)">
-                </div>
-
-                <div class="input-group">
-                    <label>D8: Cost to Remediate ($) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> Internal cost to fix one failed case.<br>
-                            <strong>How to ask:</strong> "Ballpark, what does it cost to clean one up? Agent time/Ops time?"<br>
-                            <strong>Rule:</strong> Fully loaded is better than optimistic.
-                        </div>
-                    </label>
-                    <input type="text" id="d8_remediate_cost" placeholder="e.g. 12.00" oninput="formatInput(this)">
-                </div>
-
-                <div class="input-group">
-                    <label>D9: Avg Delay (Days) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> Time things sit stalled.<br>
-                            <strong>How to ask:</strong> "When stuck, how long does it sit? Same day or a week?"<br>
-                            <strong>Rule:</strong> Ask what feels typical, not mathematical average.
-                        </div>
-                    </label>
-                    <input type="text" id="d9_delay" placeholder="e.g. 2" oninput="formatInput(this)">
-                </div>
-
-                <div id="manual-inputs" class="hidden">
-                    <h4 class="section-header">Manual Fallback Specifics (M)</h4>
-                    <div class="input-group">
-                        <label>D12: Daily Backlog Cost ($) 
-                            <span class="info-icon">?</span>
-                            <div class="tooltip-text">
-                                <strong>What it is:</strong> Daily cost of carrying unresolved work.<br>
-                                <strong>How to ask:</strong> "What does one stuck case cost per day? Overtime/SLA fines?"<br>
-                                <strong>Rule:</strong> Use this OR Leakage inputs.
-                            </div>
-                        </label>
-                        <input type="text" id="d12_backlog_cost" placeholder="e.g. 5.00" oninput="formatInput(this)">
-                    </div>
-                </div>
-
-                <div id="leakage-inputs">
-                    <h4 class="section-header">Leakage / Value at Risk (L)</h4>
-                    
-                    <div class="input-group">
-                        <label>D10: Value at Risk ($) 
-                            <span class="info-icon">?</span>
-                            <div class="tooltip-text">
-                                <strong>What it is:</strong> Economic value at stake per interaction.<br>
-                                <strong>How to ask:</strong> "If one fails, what's the value? (Order/Claim value)"<br>
-                                <strong>Rule:</strong> If resisted, switch to Manual/Backlog model.
-                            </div>
-                        </label>
-                        <input type="text" id="d10_value_at_risk" placeholder="e.g. 100.00" oninput="formatInput(this)">
-                    </div>
-
-                    <div class="input-group">
-                        <label>D11: Leakage Rate (%) 
-                            <span class="info-icon">?</span>
-                            <div class="tooltip-text">
-                                <strong>What it is:</strong> Value lost specifically due to delay.<br>
-                                <strong>How to ask:</strong> "If this drags, how much value bleeds off? 1%? 5%?"<br>
-                                <strong>Rule:</strong> Start conservative.
-                            </div>
-                        </label>
-                        <input type="text" id="d11_leakage_rate" placeholder="e.g. 1" oninput="formatInput(this)">
-                    </div>
-                </div>
-
-                <h4 class="section-header">Systemic Risk (R) - Always Included</h4>
-                
-                <div class="input-group">
-                    <label>D13: Annual Failure Prob (%) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> Chance of a major systemic issue this year.<br>
-                            <strong>How to ask:</strong> "How often do things blow up enough to get exec attention?"<br>
-                            <strong>Rule:</strong> Portfolio level, not per interaction.
-                        </div>
-                    </label>
-                    <input type="text" id="d13_sys_prob" placeholder="e.g. 20" oninput="formatInput(this)">
-                </div>
-
-                <div class="input-group">
-                    <label>D14: Cost of Major Failure ($) 
-                        <span class="info-icon">?</span>
-                        <div class="tooltip-text">
-                            <strong>What it is:</strong> All-in cost when things go really wrong.<br>
-                            <strong>How to ask:</strong> "Fines, remediation, fire drills - ballpark?"
-                        </div>
-                    </label>
-                    <input type="text" id="d14_sys_cost" placeholder="e.g. 250,000" oninput="formatInput(this)">
-                </div>
-                
-                <h4 class="section-header">Investment</h4>
-                <div class="input-group" style="width: 100%;">
-                    <label>D15: Annual Callvu Cost ($) - For ROI Calculation</label>
-                    <input type="text" id="platform_cost" placeholder="e.g. 150,000" oninput="formatInput(this)">
-                </div>
-
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Includes mandatory disclosures or signatures?</span>
             </div>
-            
-            <button class="calc-btn" onclick="calculateCoDN()">Update Calculations</button>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Triggers regulated financial or healthcare actions?</span>
+            </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Requires an immutable audit trail?</span>
+            </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Zero tolerance for errors or deviation?</span>
+            </div>
         </div>
 
-        <div class="results-section">
-            <h3 style="margin-top: 0;">Financial Impact</h3>
-
-            <div class="result-card">
-                <div class="result-title">C19: Cost of Incompletion</div>
-                <div class="result-value" id="resC19">$0</div>
-                <div class="result-sub">Standard Remediation (N_affected × D8)</div>
+        <h2>Accuracy & Determinism</h2>
+        <div class="question-group">
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Requires exact step order and strict validations?</span>
             </div>
-
-            <div class="result-card" id="card-C20">
-                <div class="result-title">C20: Cost of Delay (Revenue Leakage)</div>
-                <div class="result-value" id="resC20">$0</div>
-                <div class="result-sub">Due to Value at Risk & Delay</div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Branching logic where wrong branch creates liability?</span>
             </div>
-
-            <div class="result-card hidden" id="card-C21">
-                <div class="result-title">C21: Cost of Delay (Ops Backlog)</div>
-                <div class="result-value" id="resC21">$0</div>
-                <div class="result-sub">Due to Backlog & Delay</div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Triggers irreversible state changes?</span>
             </div>
-
-            <div class="result-card">
-                <div class="result-title">C22: Compliance / Payment Exposure</div>
-                <div class="result-value" id="resC22">$0</div>
-                <div class="result-sub">Expected Annual Loss (R)</div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Fails expensively if a step is skipped?</span>
             </div>
+        </div>
 
-            <div class="result-card highlight">
-                <div class="result-title">C25: Total Cost of Doing Nothing (Annual)</div>
-                <div class="result-value" id="resC25">$0</div>
-                <div class="result-sub">Sum of Incompletion + Delay + Risk</div>
+        <h2>Cross-System Complexity</h2>
+        <div class="question-group">
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Touches 3+ enterprise systems?</span>
             </div>
-
-            <div class="result-card">
-                <div class="result-title">C28: Cost of Delaying Decision (1 Quarter)</div>
-                <div class="result-value" id="resC28">$0</div>
-                <div class="result-sub">25% of Annual Cost</div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Requires real-time data sync?</span>
             </div>
-
-            <div class="result-card green">
-                <div class="result-title">C31: Annual Value Multiple vs Cost</div>
-                <div class="result-value" id="resC31">0.0x</div>
-                <div class="result-sub">Total CoDN / Platform Cost</div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Writes to systems of record?</span>
             </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Breaks when one system is unavailable?</span>
+            </div>
+        </div>
 
+        <h2>Exceptions & Failure Handling</h2>
+        <div class="question-group">
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Produces many edge cases requiring humans?</span>
+            </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Requires explicit escalation paths?</span>
+            </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Demands predictable rollback behavior?</span>
+            </div>
+        </div>
+
+        <h2>Security & Privacy</h2>
+        <div class="question-group">
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Handles PCI/PHI/PII?</span>
+            </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Captures secure docs or signatures?</span>
+            </div>
+            <div class="question-item">
+                <label class="switch">
+                    <input type="checkbox" class="calc-check">
+                    <span class="slider"></span>
+                </label>
+                <span class="label-text">Includes policy enforcement with legal exposure?</span>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button type="button" onclick="calculateReadiness()">See if your Workflow Needs Deterministic Compliance</button>
+        </div>
+
+    </div>
+
+    <div id="results">
+        <div class="verdict-header">
+            <span class="score-display" id="totalScore">0</span>
+            <div class="verdict-title" id="verdictTitle">--</div>
+            <div class="verdict-subtitle" id="verdictSubtitle">--</div>
+        </div>
+        <div class="result-details">
+            <p id="interpretation">--</p>
+            <h3>Guidance:</h3>
+            <ul id="guidanceList">
+                </ul>
+            <div class="action-box">
+                <strong>Recommended Action:</strong>
+                <span id="recommendedAction">--</span>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- FORMATTING FUNCTION ---
-    function formatInput(input) {
-        // 1. Remove existing commas to get clean number
-        let rawVal = input.value.replace(/,/g, '');
+    function calculateReadiness() {
+        // 1. Calculate Score based on Checked Boxes (Yes = 1 point)
+        var checkboxes = document.querySelectorAll('.calc-check');
+        var score = 0;
         
-        // 2. Allow digits and a single decimal point
-        rawVal = rawVal.replace(/[^0-9.]/g, '');
-        
-        if (rawVal === '') {
-            input.value = '';
-            return;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                score++;
+            }
         }
 
-        // 3. Split integer and decimal parts
-        let parts = rawVal.split('.');
-        
-        // 4. Add commas to integer part
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        
-        // 5. Rejoin
-        if (parts.length > 1) {
-            input.value = parts[0] + "." + parts.slice(1).join('');
+        // 2. Determine Logic
+        var title, subtitle, interpretation, action;
+        var bullets = [];
+
+        if (score <= 3) {
+            // Score 0-3: Agent-Friendly
+            title = "Agent-Friendly";
+            subtitle = "No Callvu needed";
+            interpretation = "AI can execute with minimal guardrails.";
+            bullets = [
+                "Probabilistic execution is typically safe",
+                "Standard automation or agentic AI can complete effectively",
+                "Minimal compliance exposure"
+            ];
+            action = "Let AI lead execution with lightweight supervision";
+        } else if (score <= 7) {
+            // Score 4-7: Hybrid Zone
+            title = "Hybrid Zone";
+            subtitle = "Callvu strongly recommended";
+            interpretation = "AI can start the workflow, deterministic systems should finish it.";
+            bullets = [
+                "Some steps require strict ordering or validations",
+                "Cross-system updates introduce accuracy risk",
+                "Partial compliance requirements",
+                "Callvu can ensure correct completion and prevent rework"
+            ];
+            action = "AI interprets intent, Callvu enforces deterministic completion";
         } else {
-            input.value = parts[0];
+            // Score 8+: High-Risk
+            title = "High-Risk";
+            subtitle = "Callvu required";
+            interpretation = "Autonomous AI should not own execution.";
+            bullets = [
+                "Regulated outcomes, identity checks, signatures, disclosures",
+                "Multi-system orchestration",
+                "Zero tolerance for errors or deviations",
+                "These workflows fail without strict guardrails",
+                "Callvu’s Completion & Compliance Layer is essential"
+            ];
+            action = "Run AI assistively; let Callvu own execution to guarantee a compliant finish";
         }
+
+        // 3. Update DOM with Calculated Results
+        document.getElementById('totalScore').innerText = score;
+        document.getElementById('verdictTitle').innerText = title;
+        document.getElementById('verdictSubtitle').innerText = subtitle;
+        document.getElementById('interpretation').innerText = interpretation;
+        document.getElementById('recommendedAction').innerText = action;
+
+        var listContainer = document.getElementById('guidanceList');
+        listContainer.innerHTML = ''; // Clear previous
+        
+        for (var j = 0; j < bullets.length; j++) {
+            var li = document.createElement('li');
+            li.innerText = bullets[j];
+            listContainer.appendChild(li);
+        }
+
+        // 4. Show Results and Scroll to them
+        var resultsDiv = document.getElementById('results');
+        resultsDiv.style.display = 'block';
+        resultsDiv.scrollIntoView({ behavior: 'smooth' });
     }
-
-    // --- HELPER TO PARSE NUMBERS WITH COMMAS ---
-    function parseLocaleNumber(stringNumber) {
-        if (!stringNumber) return 0;
-        // Remove commas before parsing
-        return parseFloat(stringNumber.replace(/,/g, '')) || 0;
-    }
-
-    function toggleMode() {
-        const mode = document.querySelector('input[name="calcMode"]:checked').value;
-        const manualDiv = document.getElementById('manual-inputs');
-        const leakageDiv = document.getElementById('leakage-inputs');
-        
-        const lblManual = document.getElementById('lbl-manual');
-        const lblLeakage = document.getElementById('lbl-leakage');
-        
-        // Output cards visibility
-        const cardC20 = document.getElementById('card-C20'); // Leakage Result
-        const cardC21 = document.getElementById('card-C21'); // Backlog Result
-
-        if (mode === 'manual') {
-            // Show Manual Inputs, Hide Leakage Inputs
-            manualDiv.classList.remove('hidden');
-            leakageDiv.classList.add('hidden');
-            
-            // Toggle Tab styling
-            lblManual.classList.add('selected');
-            lblLeakage.classList.remove('selected');
-
-            // Toggle Result Cards
-            cardC20.classList.add('hidden');
-            cardC21.classList.remove('hidden');
-
-        } else {
-            // Show Leakage Inputs, Hide Manual Inputs
-            manualDiv.classList.add('hidden');
-            leakageDiv.classList.remove('hidden');
-
-            // Toggle Tab styling
-            lblManual.classList.remove('selected');
-            lblLeakage.classList.add('selected');
-
-            // Toggle Result Cards
-            cardC20.classList.remove('hidden');
-            cardC21.classList.add('hidden');
-        }
-        
-        // Recalculate
-        calculateCoDN();
-    }
-
-    function calculateCoDN() {
-        // --- 1. Get Values (Using helper to strip commas) ---
-        const mode = document.querySelector('input[name="calcMode"]:checked').value;
-        
-        const D5_Vol = parseLocaleNumber(document.getElementById('d5_volume').value);
-        const D7_FailRate = parseLocaleNumber(document.getElementById('d7_failure_rate').value) / 100;
-        const D8_RemCost = parseLocaleNumber(document.getElementById('d8_remediate_cost').value);
-        const D9_Delay = parseLocaleNumber(document.getElementById('d9_delay').value);
-
-        const D13_SysProb = parseLocaleNumber(document.getElementById('d13_sys_prob').value) / 100;
-        const D14_SysCost = parseLocaleNumber(document.getElementById('d14_sys_cost').value);
-        const PlatformCost = parseLocaleNumber(document.getElementById('platform_cost').value);
-
-        // --- 2. Calculations ---
-
-        // Affected Volume
-        const affectedVol = D5_Vol * D7_FailRate;
-
-        // C19: Cost of Incompletion (Always calculated)
-        const C19 = affectedVol * D8_RemCost;
-
-        let C20 = 0; // Leakage Delay Cost
-        let C21 = 0; // Backlog Delay Cost
-        let delayCost = 0; // The one we add to total
-
-        if (mode === 'manual') {
-            // Manual Mode: Uses D12
-            const D12_BacklogCost = parseLocaleNumber(document.getElementById('d12_backlog_cost').value);
-            
-            // C21 Formula: Affected * Delay * DailyCost
-            C21 = affectedVol * D9_Delay * D12_BacklogCost;
-            delayCost = C21;
-
-        } else {
-            // Leakage Mode: Uses D10, D11
-            const D10_VaR = parseLocaleNumber(document.getElementById('d10_value_at_risk').value);
-            const D11_LeakRate = parseLocaleNumber(document.getElementById('d11_leakage_rate').value) / 100;
-
-            // C20 Formula: Affected * Delay * ValueAtRisk * LeakageRate
-            C20 = affectedVol * D9_Delay * D10_VaR * D11_LeakRate;
-            delayCost = C20;
-        }
-
-        // C22: Compliance Exposure (Risk)
-        const C22 = D13_SysProb * D14_SysCost;
-
-        // C25: Total Cost of Doing Nothing
-        const C25 = C19 + delayCost + C22;
-
-        // C28: Cost of Delaying Decision (1 Quarter)
-        const C28 = C25 / 4;
-
-        // C31: Annual Value Multiple (ROI)
-        let C31 = 0;
-        if (PlatformCost > 0) {
-            C31 = C25 / PlatformCost;
-        }
-
-        // --- 3. Update UI ---
-        const fmtMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-        
-        document.getElementById('resC19').innerText = fmtMoney.format(C19);
-        
-        // Update the visible delay cost card
-        if (mode === 'manual') {
-            document.getElementById('resC21').innerText = fmtMoney.format(C21);
-        } else {
-            document.getElementById('resC20').innerText = fmtMoney.format(C20);
-        }
-
-        document.getElementById('resC22').innerText = fmtMoney.format(C22);
-        document.getElementById('resC25').innerText = fmtMoney.format(C25);
-        document.getElementById('resC28').innerText = fmtMoney.format(C28);
-        document.getElementById('resC31').innerText = C31.toFixed(1) + "x";
-    }
-
-    // Run on load
-    window.onload = function() {
-        toggleMode(); 
-        calculateCoDN(); 
-    };
 </script>
 
 </body>
